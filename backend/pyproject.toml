@@ -1,0 +1,13 @@
+[project]
+name = "ss-fassion-backend"
+version = "0.1.0"
+description = "Flask backend for ss-fassion"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "Flask>=2.3.0"
+]
+
+[build-system]
+requires = ["setuptools>=65.5.1", "wheel"]
+build-backend = "setuptools.build_meta"

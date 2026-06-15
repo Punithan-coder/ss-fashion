@@ -1,0 +1,9 @@
+{
+  "name": "ss-fassion-backend",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Flask backend entrypoint for ss-fassion.",
+  "scripts": {
+    "start": "python app/main.py"
+  }
+}
