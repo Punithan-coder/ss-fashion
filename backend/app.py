@@ -101,6 +101,33 @@ def hello():
 @app.route('/')
 def root():
     return jsonify(status='ss-fassion backend is running')
+    @app.route('/')
+def root():
+    return jsonify(status='ss-fassion backend is running')
+
+
+# ADD THIS ENTIRE BLOCK HERE 👇
+@app.route('/api/admin/login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+
+    username = data.get('username')
+    password = data.get('password')
+
+    if username == 'admin' and password == 'admin123':
+        return jsonify({
+            'token': 'ssfashion-admin-token',
+            'message': 'Login successful'
+        })
+
+    return jsonify({
+        'message': 'Invalid login credentials'
+    }), 401
+
+
+@app.route('/api/products', methods=['GET'])
+def get_products():
+    return jsonify(products=load_products())
 
 
 @app.route('/api/products', methods=['GET'])
