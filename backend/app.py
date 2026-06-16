@@ -102,8 +102,7 @@ def hello():
 def root():
     return jsonify(status='ss-fassion backend is running')
     @app.route('/')
-def root():
-    return jsonify(status='ss-fassion backend is running')
+
 
 
 # ADD THIS ENTIRE BLOCK HERE 👇
