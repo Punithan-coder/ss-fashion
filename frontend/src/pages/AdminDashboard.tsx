@@ -90,16 +90,26 @@ export const AdminDashboard: React.FC = () => {
     });
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    if (files.length === 0) return;
+const handleFileChange = async (
+  event: React.ChangeEvent<HTMLInputElement>
+) => {
+  const files = Array.from(event.target.files || []);
 
-    const existingImages = form.images || [];
-    if (existingImages.length >= 10) {
-      setError('Maximum 10 images can be uploaded. Remove one to add another.');
+  if (files.length === 0) return;
+
+  const maxSize = 1024 * 1024; // 1MB
+
+  for (const file of files) {
+    if (file.size > maxSize) {
+      setError('Image size must be less than 1MB');
       event.target.value = '';
       return;
     }
+  }
+
+ 
+
+  const existingImages = form.images || [];
 
     const allowedCount = Math.min(10 - existingImages.length, files.length);
     const selectedFiles = files.slice(0, allowedCount);
