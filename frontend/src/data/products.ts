@@ -1,4 +1,4 @@
-﻿export const products = [
+export const products = [
   {
     id: '1',
     name: 'Blush Satin Slip Dress',
@@ -27,11 +27,10 @@
     name: 'Ivory Silk Half Saree',
     price: 6999,
     category: 'Half Sarees',
-    image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&h=1000&fit=crop',
+    image: '/assets/sushanta-rokka-K7zi9jtvpIs-unsplash.jpg',
     images: [
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=1200&h=1500&fit=crop',
-      'https://images.unsplash.com/photo-1551854838-602b5f041e90?w=1200&h=1500&fit=crop',
-      'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1200&h=1500&fit=crop',
+      '/assets/sushanta-rokka-K7zi9jtvpIs-unsplash.jpg',
+      '/assets/horitoki-ltd-dCuCMZ9XnHg-unsplash.jpg',
     ],
     description: 'A sophisticated half saree with delicate golden accents and timeless silhouette.',
     fabric: 'Soft silk with subtle shimmer',
@@ -200,10 +199,11 @@
     name: 'Rose Gold Embroidery Kurti',
     price: 2999,
     category: 'Kurtis',
-    image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&h=1000&fit=crop',
+    image: '/assets/xl-kurta123-kaswya-original-imahjxbpgwmk2nyy.jpeg',
     images: [
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=1200&h=1500&fit=crop',
-      'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=1200&h=1500&fit=crop',
+      '/assets/xl-kurta123-kaswya-original-imahjxbpgwmk2nyy.jpeg',
+      '/assets/xl-kurta123-kaswya-original-imahjxbpzremj8tr.jpeg',
+      '/assets/xxl-kurta123-kaswya-original-imahjxbpmqskhezh.jpeg',
     ],
     description: 'Elegant kurti with rose gold embroidery and contemporary flair.',
     fabric: 'Lightweight cotton silk blend',
