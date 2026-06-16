@@ -101,14 +101,11 @@ def hello():
 @app.route('/')
 def root():
     return jsonify(status='ss-fassion backend is running')
-    @app.route('/')
 
 
-
-# ADD THIS ENTIRE BLOCK HERE 👇
 @app.route('/api/admin/login', methods=['POST'])
 def admin_login():
-    data = request.get_json()
+    data = request.get_json() or {}
 
     username = data.get('username')
     password = data.get('password')
@@ -122,11 +119,6 @@ def admin_login():
     return jsonify({
         'message': 'Invalid login credentials'
     }), 401
-
-
-@app.route('/api/products', methods=['GET'])
-def get_products():
-    return jsonify(products=load_products())
 
 
 @app.route('/api/products', methods=['GET'])
