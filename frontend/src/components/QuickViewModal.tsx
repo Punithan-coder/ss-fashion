@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, ShoppingBag, Check, Heart } from 'lucide-react';
 import { Product, useCart } from '../context/CartContext';
 import { formatPrice } from '../utils/helpers';
+import { getImageUrl } from '../config';
 
 interface QuickViewModalProps {
   product: Product;
@@ -32,23 +33,23 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen,
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 animate-fadeIn">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-scaleIn">
         {/* Header */}
-        <div className="sticky top-0 bg-luxury-cream border-b border-luxury-grayLight flex items-center justify-between p-6">
-          <h2 className="text-2xl font-serif font-bold text-luxury-darkRose">Quick View</h2>
+        <div className="sticky top-0 bg-luxury-cream border-b border-luxury-grayLight flex items-center justify-between p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-serif font-bold text-luxury-darkRose">Quick View</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-luxury-softPink rounded-full transition-colors"
+            className="p-1.5 sm:p-2 hover:bg-luxury-softPink rounded-full transition-colors"
           >
-            <X size={24} className="text-luxury-darkRose" />
+            <X size={20} className="text-luxury-darkRose" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {/* Image Section */}
-          <div className="space-y-4">
-            <div className="bg-luxury-blush rounded-2xl overflow-hidden h-96">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="bg-luxury-blush rounded-2xl overflow-hidden h-56 sm:h-72 md:h-96">
               <img
-                src={images[selectedImage]}
+                src={getImageUrl(images[selectedImage])}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
@@ -61,13 +62,13 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen,
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(idx)}
-                    className={`h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                    className={`h-12 sm:h-16 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === idx
                         ? 'border-luxury-darkRose'
                         : 'border-luxury-grayLight hover:border-luxury-rose'
                     }`}
                   >
-                    <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={getImageUrl(img)} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

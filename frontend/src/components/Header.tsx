@@ -48,7 +48,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-2 group">
-            <div className="text-3xl md:text-4xl font-serif font-bold bg-gradient-to-r from-pink-500 to-rose-400 bg-clip-text text-transparent group-hover:from-pink-400 group-hover:to-rose-300 transition-all brightness-125">
+            <div className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold bg-gradient-to-r from-pink-500 to-rose-400 bg-clip-text text-transparent group-hover:from-pink-400 group-hover:to-rose-300 transition-all brightness-125">
               SS Fashion
             </div>
           </Link>

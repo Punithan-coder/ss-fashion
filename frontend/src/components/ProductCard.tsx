@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Check, ShoppingBag, Heart } from 'lucide-react';
 import { Product, useCart } from '../context/CartContext';
 import { formatPrice } from '../utils/helpers';
+import { getImageUrl } from '../config';
 
 interface ProductCardProps {
   product: Product;
@@ -87,7 +88,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, badge }) => {
 
         {/* Lazy loaded image */}
         <img
-          src={displayImage}
+          src={getImageUrl(displayImage)}
           alt={product.name}
           loading="lazy"
           onLoad={() => setImageLoaded(true)}
@@ -103,31 +104,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, badge }) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 p-5 flex flex-col bg-white">
+      <div className="flex-1 p-3 sm:p-5 flex flex-col bg-white">
         {/* Category */}
-        <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-luxury-rosePink font-bold mb-2">
+        <p className="text-[9px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-luxury-rosePink font-bold mb-1.5 sm:mb-2">
           {product.category}
         </p>
 
         {/* Product Name */}
-        <h3 className="text-base sm:text-lg font-serif font-bold text-luxury-charcoal mb-2 line-clamp-2 group-hover:text-luxury-champagne transition-colors duration-300">
+        <h3 className="text-sm sm:text-lg font-serif font-bold text-luxury-charcoal mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-luxury-champagne transition-colors duration-300">
           {product.name}
         </h3>
 
         {/* Description */}
         {product.description && (
-          <p className="text-xs sm:text-sm text-luxury-stone mb-4 line-clamp-2 flex-1 font-light leading-relaxed">
+          <p className="text-[11px] sm:text-sm text-luxury-stone mb-3 sm:mb-4 line-clamp-2 flex-1 font-light leading-relaxed">
             {product.description}
           </p>
         )}
 
         {/* Price and Stock */}
-        <div className="mb-5">
-          <p className="text-lg sm:text-xl font-bold text-luxury-charcoal">
+        <div className="mb-3 sm:mb-5">
+          <p className="text-base sm:text-xl font-bold text-luxury-charcoal">
             {formatPrice(product.price)}
           </p>
           {product.stock !== undefined && (
-            <p className={`text-[10px] sm:text-xs mt-1.5 uppercase tracking-wider font-semibold ${
+            <p className={`text-[9px] sm:text-xs mt-1 uppercase tracking-wider font-semibold ${
               product.stock > 0 ? 'text-luxury-stone' : 'text-red-500'
             }`}>
               {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
@@ -139,7 +140,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, badge }) => {
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className={`w-full py-3.5 border border-luxury-charcoal font-bold text-xs uppercase tracking-[0.1em] transition-all duration-300 flex items-center justify-center gap-2 group/btn ${
+          className={`w-full py-2.5 sm:py-3.5 border border-luxury-charcoal font-bold text-[10px] sm:text-xs uppercase tracking-normal sm:tracking-[0.1em] transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2 group/btn ${
             product.stock === 0
               ? 'bg-luxury-grayLight text-luxury-grayDark border-luxury-grayLight cursor-not-allowed opacity-60'
               : inCart || added
@@ -149,17 +150,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, badge }) => {
         >
           {product.stock === 0 ? (
             <>
-              <ShoppingBag size={16} />
+              <ShoppingBag size={14} />
               <span>Out of stock</span>
             </>
           ) : inCart || added ? (
             <>
-              <Check size={16} />
+              <Check size={14} />
               <span>{buttonLabel}</span>
             </>
           ) : (
             <>
-              <ShoppingBag size={16} className="group-hover/btn:scale-110 transition-transform" />
+              <ShoppingBag size={14} className="group-hover/btn:scale-110 transition-transform" />
               <span>{buttonLabel}</span>
             </>
           )}

@@ -4,6 +4,7 @@ import { products as fallbackProducts } from '../data/products';
 import { Product } from '../context/CartContext';
 import { ProductCard, QuickViewModal, FloatingWhatsAppButton } from '../components';
 import { ArrowRight, Sparkles, Star, Package, Award, Headphones } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const heroBannerImage = 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1600&h=700&fit=crop';
 
@@ -13,7 +14,7 @@ export const Home: React.FC = () => {
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${API_BASE_URL}/api/products`)
       .then((response) => response.json())
       .then((data) => {
         if (data?.products) {
@@ -83,11 +84,11 @@ export const Home: React.FC = () => {
                 <span className="text-sm font-bold text-white uppercase tracking-[0.2em] drop-shadow-md">New Collection</span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-6 leading-[1.1] drop-shadow-lg">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-4 sm:mb-6 leading-[1.2] sm:leading-[1.1] drop-shadow-lg">
                 Timeless Elegance, Modern Confidence
               </h1>
 
-              <p className="text-xl md:text-2xl text-luxury-cream/90 mb-10 max-w-xl leading-relaxed font-light drop-shadow-md">
+              <p className="text-base sm:text-xl md:text-2xl text-luxury-cream/90 mb-8 sm:mb-10 max-w-xl leading-relaxed font-light drop-shadow-md">
                 Discover our carefully curated collection of premium women's fashion designed for every occasion.
               </p>
 

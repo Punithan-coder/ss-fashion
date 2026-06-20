@@ -3,29 +3,25 @@ import os
 import uuid
 from datetime import datetime
 from functools import wraps
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, send_from_directory
+from flask_cors import CORS
+
+# Import from db.py
+try:
+    from db import SessionLocal, ProductModel, init_db, compress_and_save_image
+except ImportError:
+    from app.db import SessionLocal, ProductModel, init_db, compress_and_save_image
 
 app = Flask(__name__)
+CORS(app)
+
 BASE_DIR = os.path.dirname(__file__)
-PRODUCT_FILE = os.path.join(BASE_DIR, 'products.json')
 ADMIN_USERNAME = 'ssadmin'
 ADMIN_PASSWORD = 'ss1989'
 ADMIN_TOKEN = 'ssfashion-admin-token'
 
-
-def load_products():
-    if not os.path.exists(PRODUCT_FILE):
-        return []
-    try:
-        with open(PRODUCT_FILE, 'r', encoding='utf-8') as file:
-            return json.load(file)
-    except Exception:
-        return []
-
-
-def save_products(products):
-    with open(PRODUCT_FILE, 'w', encoding='utf-8') as file:
-        json.dump(products, file, indent=2, ensure_ascii=False)
+# Initialize database on startup, using current products.json as seed data
+init_db(os.path.join(BASE_DIR, 'products.json'))
 
 
 def admin_required(func):
@@ -38,18 +34,19 @@ def admin_required(func):
     return wrapper
 
 
-@app.after_request
-def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
-    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
-    return response
+@app.route('/uploads/<path:filename>')
+def serve_uploads(filename):
+    return send_from_directory(os.path.join(os.path.dirname(__file__), 'uploads'), filename)
 
 
 @app.route('/api/products', methods=['GET'])
 def get_products():
-    products = load_products()
-    return jsonify(products=products)
+    db = SessionLocal()
+    try:
+        products = db.query(ProductModel).all()
+        return jsonify(products=[p.to_dict() for p in products])
+    finally:
+        db.close()
 
 
 @app.route('/api/products', methods=['POST'])
@@ -60,85 +57,117 @@ def add_product():
     if isinstance(images, str) and images:
         images = [images]
     images = [str(img).strip() for img in images if str(img).strip()]
-    featured_image = str(data.get('image', '')).strip() or (images[0] if images else '')
 
     required_fields = ['name', 'price', 'category']
-    if not all(data.get(field) for field in required_fields) or not featured_image:
+    if not all(data.get(field) for field in required_fields) or not images:
         return jsonify(message='Missing required product fields'), 400
 
-    products = load_products()
-    new_product = {
-        'id': uuid.uuid4().hex,
-        'name': data['name'],
-        'price': int(data.get('price', 0)),
-        'category': data['category'],
-        'image': featured_image,
-        'images': images or [featured_image],
-        'description': data.get('description', ''),
-        'stock': int(data.get('stock', 0)),
-        'shippingCost': float(data.get('shippingCost', 0.0)),
-        'active': bool(data.get('active', True)),
-        'addedAt': datetime.utcnow().isoformat() + 'Z',
-    }
-    products.append(new_product)
-    save_products(products)
-    return jsonify(product=new_product), 201
+    # Compress and save base64 images to static uploads
+    upload_dir = os.path.join(os.path.dirname(__file__), 'uploads')
+    processed_images = [compress_and_save_image(img, upload_dir) for img in images]
+    featured_image = processed_images[0] if processed_images else ""
+
+    db = SessionLocal()
+    try:
+        new_product = ProductModel(
+            id=uuid.uuid4().hex,
+            name=data['name'],
+            price=int(data.get('price', 0)),
+            category=data['category'],
+            image=featured_image,
+            images=json.dumps(processed_images),
+            description=data.get('description', ''),
+            stock=int(data.get('stock', 0)),
+            shippingCost=float(data.get('shippingCost', 0.0)),
+            active=bool(data.get('active', True)),
+            addedAt=datetime.utcnow().isoformat() + 'Z'
+        )
+        db.add(new_product)
+        db.commit()
+        product_dict = new_product.to_dict()
+        return jsonify(product=product_dict), 201
+    except Exception as e:
+        db.rollback()
+        return jsonify(message=f"Database error: {str(e)}"), 500
+    finally:
+        db.close()
 
 
 @app.route('/api/products/<product_id>', methods=['PUT'])
 @admin_required
 def update_product(product_id):
     data = request.get_json() or {}
-    images = data.get('images')
-    if isinstance(images, str) and images:
-        images = [images]
-    if images is not None:
-        images = [str(img).strip() for img in images if str(img).strip()]
+    db = SessionLocal()
+    try:
+        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+        if not product:
+            return jsonify(message='Product not found'), 404
 
-    products = load_products()
-    index = next((i for i, product in enumerate(products) if product['id'] == product_id), None)
-    if index is None:
-        return jsonify(message='Product not found'), 404
+        images = data.get('images')
+        if isinstance(images, str) and images:
+            images = [images]
+        if images is not None:
+            images = [str(img).strip() for img in images if str(img).strip()]
+            
+            # Compress and save new base64 images
+            upload_dir = os.path.join(os.path.dirname(__file__), 'uploads')
+            processed_images = [compress_and_save_image(img, upload_dir) for img in images]
+            product.images = json.dumps(processed_images)
+            product.image = processed_images[0] if processed_images else product.image
 
-    product = products[index]
-    featured_image = str(data.get('image', product.get('image', ''))).strip()
-    if images:
-        featured_image = images[0]
+        if 'name' in data:
+            product.name = data['name']
+        if 'price' in data:
+            product.price = int(data['price'])
+        if 'category' in data:
+            product.category = data['category']
+        if 'description' in data:
+            product.description = data['description']
+        if 'stock' in data:
+            product.stock = int(data['stock'])
+        if 'shippingCost' in data:
+            product.shippingCost = float(data['shippingCost'])
+        if 'active' in data:
+            product.active = bool(data['active'])
 
-    product.update({
-        'name': data.get('name', product['name']),
-        'price': int(data.get('price', product['price'])),
-        'category': data.get('category', product['category']),
-        'image': featured_image,
-        'images': images if images is not None else product.get('images', [product.get('image')]),
-        'description': data.get('description', product.get('description', '')),
-        'stock': int(data.get('stock', product.get('stock', 0))),
-        'shippingCost': float(data.get('shippingCost', product.get('shippingCost', 0.0))),
-        'active': bool(data.get('active', product.get('active', True))),
-    })
-    products[index] = product
-    save_products(products)
-    return jsonify(product=product)
+        db.commit()
+        product_dict = product.to_dict()
+        return jsonify(product=product_dict)
+    except Exception as e:
+        db.rollback()
+        return jsonify(message=f"Database error: {str(e)}"), 500
+    finally:
+        db.close()
 
 
 @app.route('/api/products/<product_id>', methods=['DELETE'])
 @admin_required
 def delete_product(product_id):
-    products = load_products()
-    remaining = [product for product in products if product['id'] != product_id]
-    if len(remaining) == len(products):
-        return jsonify(message='Product not found'), 404
-    save_products(remaining)
-    return jsonify(message='Product deleted')
+    db = SessionLocal()
+    try:
+        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+        if not product:
+            return jsonify(message='Product not found'), 404
+        db.delete(product)
+        db.commit()
+        return jsonify(message='Product deleted')
+    except Exception as e:
+        db.rollback()
+        return jsonify(message=f"Database error: {str(e)}"), 500
+    finally:
+        db.close()
 
 
 @app.route('/api/products/<product_id>', methods=['GET'])
 def get_product(product_id):
-    products = load_products()
-    product = next((product for product in products if product['id'] == product_id), None)
-    if not product:
-        return jsonify(message='Product not found'), 404
-    return jsonify(product=product)
+    db = SessionLocal()
+    try:
+        product = db.query(ProductModel).filter(ProductModel.id == product_id).first()
+        if not product:
+            return jsonify(message='Product not found'), 404
+        return jsonify(product=product.to_dict())
+    finally:
+        db.close()
 
 
 @app.route('/api/admin/login', methods=['POST'])
@@ -157,4 +186,5 @@ def root():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)

@@ -3,6 +3,7 @@ import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { products as fallbackProducts, categories } from '../data/products';
 import { ProductCard, QuickViewModal } from '../components';
 import { Product } from '../context/CartContext';
+import { API_BASE_URL } from '../config';
 
 export const Shop: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(fallbackProducts);
@@ -15,7 +16,7 @@ export const Shop: React.FC = () => {
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    fetch('/api/products')
+    fetch(`${API_BASE_URL}/api/products`)
       .then((response) => response.json())
       .then((data) => {
         if (data?.products) {
@@ -111,14 +112,14 @@ export const Shop: React.FC = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-luxury-rose" size={20} />
+          <div className="relative max-w-2xl mx-auto px-2">
+            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-luxury-rose" size={18} />
             <input
               type="text"
-              placeholder="Search for style, color, or category..."
+              placeholder="Search styles or categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 border-2 border-luxury-grayLight rounded-full bg-white text-luxury-stone placeholder-luxury-stone/50 focus:outline-none focus:border-luxury-rose focus:ring-0 font-medium shadow-sm"
+              className="w-full pl-11 pr-4 py-3 sm:py-4 border-2 border-luxury-grayLight rounded-full bg-white text-sm sm:text-base text-luxury-stone placeholder-luxury-stone/50 focus:outline-none focus:border-luxury-rose focus:ring-0 font-medium shadow-sm"
             />
           </div>
         </div>

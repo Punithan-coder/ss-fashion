@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 export const AdminLogin: React.FC = () => {
   const navigate = useNavigate();
@@ -19,15 +20,15 @@ export const AdminLogin: React.FC = () => {
 
     try {
       const response = await fetch(
-  'https://ss-fashion-a2tl.onrender.com/api/admin/login',
-  {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ username, password }),
-  }
-);
+        API_BASE_URL ? `${API_BASE_URL}/api/admin/login` : 'https://ss-fashion-a2tl.onrender.com/api/admin/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        }
+      );
 
       const data = await response.json();
       if (response.ok && data.token) {

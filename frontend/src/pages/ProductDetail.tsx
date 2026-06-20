@@ -5,6 +5,7 @@ import { products as fallbackProducts } from '../data/products';
 import { useCart, Product } from '../context/CartContext';
 import { formatPrice } from '../utils/helpers';
 import { ProductCard } from '../components/ProductCard';
+import { API_BASE_URL, getImageUrl } from '../config';
 
 export const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +23,7 @@ export const ProductDetail: React.FC = () => {
     if (!id) return;
     setLoading(true);
 
-    fetch('/api/products')
+    fetch(`${API_BASE_URL}/api/products`)
       .then((response) => response.json())
       .then((data) => {
         const allProducts: Product[] = data?.products || fallbackProducts;
@@ -123,7 +124,7 @@ export const ProductDetail: React.FC = () => {
                       }`}
                     >
                       <img
-                        src={image}
+                        src={getImageUrl(image)}
                         alt={`${product.name} thumbnail ${index + 1}`}
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
                       />
@@ -135,9 +136,9 @@ export const ProductDetail: React.FC = () => {
               {/* Prominent Main Image with Luxury styling */}
               <div className="flex-1 relative overflow-hidden rounded-[24px] md:rounded-[32px] shadow-lg bg-stone-50 group border border-rose-100/50">
                 <img
-                  src={gallery[activeImage]}
+                  src={getImageUrl(gallery[activeImage])}
                   alt={product.name}
-                  className="w-full h-[450px] md:h-[550px] object-cover transition-transform duration-700 ease-out hover:scale-[1.03] cursor-zoom-in"
+                  className="w-full h-[280px] sm:h-[400px] md:h-[500px] lg:h-[550px] object-cover transition-transform duration-700 ease-out hover:scale-[1.03] cursor-zoom-in"
                   onClick={() => setShowZoom(true)}
                 />
                 <button
@@ -293,7 +294,7 @@ export const ProductDetail: React.FC = () => {
       {showZoom && (
         <div className="fixed inset-0 z-50 bg-black/80 p-4 flex items-center justify-center" onClick={() => setShowZoom(false)}>
           <img
-            src={gallery[activeImage]}
+            src={getImageUrl(gallery[activeImage])}
             alt={product.name}
             className="max-h-full max-w-full rounded-[32px] object-contain shadow-2xl"
           />

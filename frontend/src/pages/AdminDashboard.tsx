@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatPrice } from '../utils/helpers';
+import { API_BASE_URL, getImageUrl } from '../config';
 
 interface AdminProduct {
   id: string;
@@ -67,7 +68,7 @@ export const AdminDashboard: React.FC = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch(`${API_BASE_URL}/api/products`);
       const data = await response.json();
       setProducts(data.products || []);
     } catch (err) {
@@ -97,11 +98,11 @@ const handleFileChange = async (
 
   if (files.length === 0) return;
 
-  const maxSize = 1024 * 1024; // 1MB
+  const maxSize = 10 * 1024 * 1024; // 10MB
 
   for (const file of files) {
     if (file.size > maxSize) {
-      setError('Image size must be less than 1MB');
+      setError('Image size must be less than 10MB');
       event.target.value = '';
       return;
     }
@@ -235,7 +236,7 @@ const handleFileChange = async (
       images: form.images.slice(0, 10),
     };
 
-    const url = selectedId ? `/api/products/${selectedId}` : '/api/products';
+    const url = selectedId ? `${API_BASE_URL}/api/products/${selectedId}` : `${API_BASE_URL}/api/products`;
     const method = selectedId ? 'PUT' : 'POST';
 
     setIsSubmitting(true);
@@ -279,7 +280,7 @@ const handleFileChange = async (
     if (!window.confirm('Delete this product from inventory?')) return;
 
     try {
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/products/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -313,10 +314,10 @@ const handleFileChange = async (
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-rose-600 mb-2">Admin Panel</p>
-            <h1 className="text-4xl font-serif font-bold text-stone-900">Product Management</h1>
+            <h1 className="text-2xl sm:text-4xl font-serif font-bold text-stone-900">Product Management</h1>
             <p className="text-stone-600 mt-2">Manage inventory, pricing, stock and collections from a secure dashboard.</p>
           </div>
-          <button onClick={logout} className="btn-luxury-secondary rounded-full px-6 py-3">
+          <button onClick={logout} className="btn-luxury-secondary rounded-full px-6 py-3 self-start md:self-auto">
             Log out
           </button>
         </div>
@@ -337,13 +338,13 @@ const handleFileChange = async (
         </div>
 
         <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr]">
-          <div className="bg-white rounded-[32px] p-8 shadow-xl">
-            <div className="mb-8 flex items-center justify-between gap-4">
+          <div className="bg-white rounded-[32px] p-4 sm:p-8 shadow-xl">
+            <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <p className="text-sm uppercase tracking-[0.35em] text-rose-600 mb-2">Inventory</p>
-                <h2 className="text-3xl font-semibold text-stone-900">Add or edit a product</h2>
+                <h2 className="text-xl sm:text-3xl font-semibold text-stone-900">Add or edit a product</h2>
               </div>
-              <button onClick={handleReset} className="btn-luxury-secondary rounded-full px-5 py-3">
+              <button onClick={handleReset} className="btn-luxury-secondary rounded-full px-5 py-3 self-start sm:self-auto">
                 New Product
               </button>
             </div>
@@ -447,7 +448,7 @@ const handleFileChange = async (
                           className={`group rounded-[24px] border p-3 shadow-sm transition ${draggedIndex === index ? 'border-rose-500 bg-rose-50' : 'border-rose-100 bg-white hover:border-rose-200'}`}
                         >
                           <div className="relative overflow-hidden rounded-3xl bg-stone-100">
-                            <img src={src} alt={`Product image ${index + 1}`} className="h-40 w-full object-cover" />
+                            <img src={getImageUrl(src)} alt={`Product image ${index + 1}`} className="h-40 w-full object-cover" />
                           </div>
                           <div className="mt-3 flex flex-col gap-2 text-sm">
                             <div className="flex items-center justify-between gap-2">
@@ -539,7 +540,7 @@ const handleFileChange = async (
                       <div className="grid gap-4 md:grid-cols-[110px_minmax(0,1fr)]">
                         <div className="overflow-hidden rounded-[28px] bg-rose-50">
                           <img
-                            src={product.image || product.images?.[0] || ''}
+                            src={getImageUrl(product.image || product.images?.[0] || '')}
                             alt={product.name}
                             className="h-full w-full object-cover min-h-[120px]"
                           />
