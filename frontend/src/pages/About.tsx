@@ -49,7 +49,7 @@ export const About: React.FC = () => {
             <div className="order-1 lg:order-2 rounded-none overflow-hidden h-[500px] shadow-2xl relative group">
               <div className="absolute inset-0 border-8 border-luxury-cream/20 z-10 pointer-events-none"></div>
               <img
-                src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&h=1000&fit=crop"
+                src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=1000&fit=crop"
                 alt="SS Fashion Brand"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />

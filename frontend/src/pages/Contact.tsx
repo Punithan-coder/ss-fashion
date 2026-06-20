@@ -46,24 +46,17 @@ export const Contact: React.FC = () => {
 
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
             <div className="bg-white rounded-[32px] p-8 shadow-lg text-center">
               <div className="mx-auto mb-5 w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center text-rose-700">
                 <Phone size={28} />
               </div>
               <h3 className="text-xl font-semibold text-stone-900 mb-3">Call Us</h3>
-              <p className="text-stone-600">+91 7666 666 666</p>
-              <p className="text-stone-600 mt-2">+91 9876 543 210</p>
+              <p className="text-stone-600">+91 8072003011</p>
+
             </div>
 
-            <div className="bg-white rounded-[32px] p-8 shadow-lg text-center">
-              <div className="mx-auto mb-5 w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center text-rose-700">
-                <Mail size={28} />
-              </div>
-              <h3 className="text-xl font-semibold text-stone-900 mb-3">Email</h3>
-              <p className="text-stone-600">info@ssfashion.com</p>
-              <p className="text-stone-600 mt-2">support@ssfashion.com</p>
-            </div>
+
 
             <div className="bg-white rounded-[32px] p-8 shadow-lg text-center">
               <div className="mx-auto mb-5 w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center text-rose-700">

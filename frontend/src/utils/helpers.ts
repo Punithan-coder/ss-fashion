@@ -42,7 +42,7 @@ export const generateOrderSummary = (
 };
 
 export const sendOrderViaWhatsApp = (orderSummary: string) => {
-  const phoneNumber = '917666666666'; // Replace with actual store owner number
+  const phoneNumber = '918072003011'; // Replace with actual store owner number
   const encodedMessage = encodeURIComponent(orderSummary);
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
   window.open(whatsappUrl, '_blank');

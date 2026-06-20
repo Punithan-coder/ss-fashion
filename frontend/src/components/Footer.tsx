@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Instagram, Twitter, Mail, Heart, MapPin, Phone } from 'lucide-react';
+import { Instagram, Heart, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
@@ -18,28 +18,12 @@ export const Footer: React.FC = () => {
             </p>
             <div className="flex gap-3 pt-2">
               <a 
-                href="https://instagram.com" 
+                href="https://www.instagram.com/ss_fashion_creators?igsh=MXUwbXcydHUwYzZ5dA==" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="p-2 hover:bg-luxury-softPink rounded-full text-luxury-darkRose transition-all"
               >
                 <Instagram size={20} />
-              </a>
-              <a 
-                href="https://facebook.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="p-2 hover:bg-luxury-softPink rounded-full text-luxury-darkRose transition-all"
-              >
-                <Facebook size={20} />
-              </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="p-2 hover:bg-luxury-softPink rounded-full text-luxury-darkRose transition-all"
-              >
-                <Twitter size={20} />
               </a>
             </div>
           </div>
@@ -106,14 +90,7 @@ export const Footer: React.FC = () => {
                 <Phone size={20} className="text-luxury-rose flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm text-luxury-stone">WhatsApp Support</p>
-                  <p className="font-semibold text-luxury-darkRose">+91 99999-99999</p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <Mail size={20} className="text-luxury-rose flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm text-luxury-stone">Email</p>
-                  <p className="font-semibold text-luxury-darkRose">hello@ssfashion.com</p>
+                  <p className="font-semibold text-luxury-darkRose">+91 8072003011</p>
                 </div>
               </div>
             </div>
