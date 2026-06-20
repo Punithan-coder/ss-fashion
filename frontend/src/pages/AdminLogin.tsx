@@ -20,7 +20,7 @@ export const AdminLogin: React.FC = () => {
 
     try {
       const response = await fetch(
-        API_BASE_URL ? `${API_BASE_URL}/api/admin/login` : 'https://ss-fashion-a2tl.onrender.com/api/admin/login',
+        `${API_BASE_URL}/api/admin/login`,
         {
           method: 'POST',
           headers: {
